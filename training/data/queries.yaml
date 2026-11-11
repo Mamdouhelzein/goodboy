@@ -1,0 +1,360 @@
+# Labelled requests for training goodboy's router.
+# Each key is a skill name; "_none" holds requests that need no skill.
+# Add your own lines and run `python training/train.py` to retrain.
+
+pdf:
+  - merge these three pdfs into one file
+  - extract the tables from this pdf report into csv
+  - split a 40 page pdf into separate pages
+  - fill out the form fields in application.pdf
+  - add a watermark to every page of my document pdf
+  - ocr a scanned pdf so i can search it
+  - pull all the text out of a PDF
+  - rotate pages in a pdf that were scanned sideways
+  - combine my lecture slides exported as pdf into a single file
+  - password protect a pdf before i send it
+  - get the images out of a pdf file
+docx:
+  - edit this word document and fix the formatting
+  - create a .docx report with headings and a table
+  - turn my notes into a Word file
+  - add tracked changes to the contract docx
+  - read the text from a word doc
+  - make a professional memo as a microsoft word document
+  - insert a table of contents into my docx
+  - replace every instance of the company name in a word file
+  - generate a dotx template for letters
+  - convert my essay into word format with page numbers
+pptx:
+  - make a slide deck about our quarterly results
+  - build a powerpoint presentation for my thesis defense
+  - extract the speaker notes from this pptx
+  - add a slide to my existing presentation
+  - create a pitch deck for my startup
+  - edit the slides in deck.pptx to use a new layout
+  - turn this outline into presentation slides
+  - read all the text out of a powerpoint file
+  - make 10 slides explaining neural networks for class
+  - change the template of my potx
+xlsx:
+  - add a formula column to my spreadsheet
+  - create an excel budget tracker with totals
+  - fix the broken formulas in report.xlsx
+  - make a chart from the data in my excel sheet
+  - open this xlsx and sum the sales by region
+  - convert a tsv file into a formatted excel workbook
+  - build a financial model in excel with assumptions tab
+  - format the header row and freeze panes in a workbook
+  - read an .xlsm file and list the sheets
+  - create a spreadsheet of my grades with averages
+mcp-builder:
+  - build an mcp server that wraps the github api
+  - create a model context protocol server in python with fastmcp
+  - write an MCP tool for querying my postgres database
+  - make a typescript mcp server for the weather api
+  - how should i design tools for an mcp server
+  - connect an external api to claude through mcp
+  - expose my internal service to llms as an mcp integration
+  - scaffold a new mcp server project in node
+  - evaluate the quality of my mcp server's tools
+webapp-testing:
+  - test the login page of my local web app with playwright
+  - take a screenshot of my site running on localhost
+  - check if the signup button works in my react app
+  - debug why my frontend form isn't submitting
+  - write browser automation tests for my web app
+  - read the browser console logs from my local dev server
+  - click through my app and verify the checkout flow
+  - run end to end ui tests against localhost:3000
+  - verify the navbar renders correctly in a headless browser
+frontend-design:
+  - design a landing page that doesn't look generic
+  - improve the visual design of my dashboard ui
+  - pick fonts and colors for my portfolio website
+  - make my web app look more polished and intentional
+  - redesign this settings screen
+  - give my react components a distinctive aesthetic
+  - build a beautiful pricing page
+  - my site looks like every other bootstrap template, fix it
+  - help with ui typography and spacing
+web-artifacts-builder:
+  - build a complex react artifact with routing and state
+  - make a multi component claude artifact using shadcn ui
+  - create an interactive html artifact with tailwind and several pages
+  - bundle a react app into a single html artifact
+  - build an elaborate claude.ai artifact with tabs and forms
+  - set up shadcn components in an artifact
+algorithmic-art:
+  - make generative art with p5.js
+  - create a flow field animation in code
+  - code a particle system art piece with a random seed
+  - generative art that i can tweak with sliders
+  - algorithmic art inspired by noise and circles
+  - make procedural art in javascript
+canvas-design:
+  - design a poster for our hackathon
+  - create a png art piece for my wall
+  - make a static visual design as a pdf poster
+  - design an album style cover image that is original
+  - create a minimalist art print
+  - make a flyer graphic for a club event
+brand-guidelines:
+  - apply anthropic brand colors to this page
+  - use anthropic's official typography and style
+  - make this document match anthropic's look and feel
+  - what are anthropic's brand colors
+  - style my artifact with the company's brand guidelines
+theme-factory:
+  - apply a theme to my slides
+  - give this html page a preset color and font theme
+  - pick one of the ready made themes for my report
+  - restyle my artifact with a different theme
+  - generate a new theme with matching fonts and colors
+  - make my docs and slides share a consistent theme
+slack-gif-creator:
+  - make a gif of a dancing cat for slack
+  - create an animated emoji gif for our slack channel
+  - make me a looping gif of a rocket launching for slack
+  - animated reaction gif optimized for slack size limits
+  - make a slack gif that says ship it
+internal-comms:
+  - write a status report for leadership
+  - draft a company newsletter update
+  - write a 3p update for my team
+  - write an internal announcement about the office move
+  - draft an incident update email to the whole company
+  - summarize our team progress for the weekly update
+  - write faq answers for an internal policy change
+doc-coauthoring:
+  - help me write a technical spec for a new feature
+  - co-write a design doc with me step by step
+  - draft a proposal document together
+  - work with me on a decision doc for choosing a database
+  - help me structure documentation for my project
+  - write an rfc with me
+skill-creator:
+  - create a new skill for claude
+  - write a SKILL.md for my workflow
+  - improve the description of my skill so it triggers better
+  - run evals on my skill
+  - benchmark how well my skill performs
+  - turn this process into a reusable skill
+claude-api:
+  - call the claude api from python
+  - how do i stream responses with the anthropic sdk
+  - use tool use with claude in typescript
+  - what model id should i use for claude opus
+  - set up prompt caching with the anthropic api
+  - count tokens before sending a claude request
+  - migrate my code to the newest claude model
+  - build an agent with the anthropic sdk
+academy-guide:
+  - is there a course on how to use claude
+  - where can i learn claude through tutorials
+  - recommend claude academy lessons for beginners
+discernment-nudge:
+  - double check the advice you just gave me
+  - should i rely on this estimate you drafted
+nmap-triage:
+  - which of these open ports from my nmap scan are dangerous
+  - here is my nmap output, what should i close
+  - analyze port scan results and tell me the risks
+  - is having port 3389 open a problem
+  - flag vulnerable services from a masscan result
+  - harden the services found in this scan
+  - nmap shows mysql 3306 open on my server, what now
+  - explain the exposure of each open port on my host
+  - rate the risk of ports 21 22 23 445 being open
+log-analysis:
+  - find brute force attempts in my auth.log
+  - which ips are hammering my ssh server
+  - analyze apache access logs for attacks
+  - look through syslog for anything suspicious
+  - parse nginx logs and find scanners
+  - investigate failed logins in windows event logs
+  - build a timeline from these server logs
+  - count failed password attempts per ip
+phishing-analysis:
+  - is this email a phishing attempt
+  - check the headers of this suspicious email
+  - analyze spf dkim and dmarc results for an email
+  - someone sent me a weird link pretending to be my bank
+  - inspect a suspicious attachment from an email safely
+  - figure out if this message really came from paypal
+  - analyze a phishing email for my security class
+secrets-scanning:
+  - i accidentally pushed my aws key to github
+  - scan my repo for leaked api keys
+  - remove a password from my git history
+  - run gitleaks on my project
+  - find hardcoded tokens in the codebase
+  - rotate a leaked openai key and clean the repo
+  - set up a pre-commit hook to catch secrets
+docker-hardening:
+  - make my dockerfile more secure
+  - run my container as a non root user
+  - scan my docker image for vulnerabilities with trivy
+  - best practices for hardening containers
+  - reduce the attack surface of my docker image
+  - is running a container with --privileged bad
+  - pick a minimal base image for my app
+linux-hardening:
+  - harden my ubuntu server
+  - disable root ssh login and password auth
+  - set up ufw firewall rules on my vps
+  - install fail2ban to protect ssh
+  - secure a fresh debian install
+  - configure automatic security updates on linux
+  - find suid binaries and audit sudoers
+incident-report:
+  - write an incident response report for a ransomware attack
+  - draft a postmortem for yesterday's breach
+  - document the timeline of a security incident
+  - write a blameless postmortem
+  - summarize root cause and lessons learned after the outage
+  - incident report template for my soc lab
+jwt-inspection:
+  - decode this jwt token
+  - check if my jwt is validated correctly
+  - what's inside this bearer token eyJhbGciOi
+  - find vulnerabilities in how my api uses jwts
+  - alg none attack on json web tokens
+  - verify a jwt signature in python
+git-workflow:
+  - undo my last git commit
+  - resolve a merge conflict
+  - squash my commits before opening a pr
+  - how do i rebase my branch on main
+  - i committed to the wrong branch
+  - revert a commit that was already pushed
+  - clean up my messy git history
+regex-builder:
+  - write a regex to match email addresses
+  - regular expression for ipv4 addresses
+  - extract dates from text with a pattern
+  - explain what this regex does
+  - regex to pull the ip and status code out of log lines
+  - test my pattern against these examples
+csv-cleaning:
+  - clean up this messy csv with pandas
+  - fix the encoding and duplicate rows in my data file
+  - my csv has wrong headers and missing values
+  - normalize dates in a csv column
+  - remove duplicates from a dataset with pandas
+  - tidy a dataframe before analysis
+latex-writing:
+  - fix my latex compile error
+  - write an equation in latex
+  - format my lab report in latex
+  - add a bibliography with bibtex
+  - make a table in latex
+  - set up an overleaf paper with figures
+resume-writer:
+  - improve my resume for a cybersecurity internship
+  - write a cover letter for a security analyst role
+  - make my cv bullet points stronger
+  - tailor my resume to this job description
+  - one page resume for a computer engineering student
+  - review my resume
+readme-writer:
+  - write a readme for my github project
+  - make my repo's readme look professional
+  - add install and usage sections to my readme
+  - readme with badges and a demo gif
+  - document my cli tool on github
+  - help me write the project description for github
+sql-query-helper:
+  - write a sql query to join orders and customers
+  - why is my postgres query slow
+  - design a database schema for a library
+  - group by and count in sql
+  - add an index to speed up this query
+  - use a window function to rank rows in mysql
+python-packaging:
+  - make my python script installable as a command
+  - write a pyproject.toml for my cli
+  - publish my package to pypi
+  - add a console script entry point
+  - package my project so people can pip install it
+  - set up github actions to release to pypi
+ml-training:
+  - train a classifier with scikit-learn
+  - my model is overfitting what should i do
+  - evaluate my model with precision recall and f1
+  - split my dataset into train and test properly
+  - train a neural network in pytorch
+  - cross validate a random forest
+  - build a model to predict which ports are vulnerable
+api-testing:
+  - test my rest api endpoints
+  - write pytest tests for my flask api
+  - send a post request with curl and a bearer token
+  - check that my api returns the right status codes
+  - validate json responses against a schema
+  - test authentication on my backend endpoints
+ctf-crypto:
+  - solve this caesar cipher
+  - decode this base64 string from a ctf
+  - xor challenge in a capture the flag
+  - crack this rsa with a small exponent
+  - what cipher is this ciphertext
+  - vigenere decryption without the key
+pcap-analysis:
+  - analyze this pcap file
+  - find suspicious traffic in a wireshark capture
+  - extract files from a packet capture
+  - use tshark to list http requests
+  - look for credentials in captured network traffic
+  - follow tcp streams in a capture with scapy
+
+_none:
+  - hi
+  - how are you doing today
+  - tell me a joke
+  - what is the capital of france
+  - who won the world cup
+  - what's the weather like
+  - thanks!
+  - what is 17 times 23
+  - give me a motivational quote
+  - what time is it in tokyo
+  - recommend a movie for tonight
+  - what is the meaning of life
+  - translate hello into spanish
+  - how tall is mount everest
+  - write a poem about the sea
+  - who are you
+  - good morning
+  - what should i eat for dinner
+  - tell me a fun fact
+  - how many days until christmas
+  - what's your favorite color
+  - explain the theory of relativity simply
+  - who was napoleon
+  - how do magnets work
+  - suggest a name for my cat
+  - lol
+  - what does photosynthesis mean
+  - how far is the moon
+  - recommend a good book
+  - i'm bored
+  - what's the best phone to buy this year
+  - how do i make pancakes
+  - can you help me with my homework on world war 2
+  - what is love
+  - write me a short story about a dragon
+  - explain how the stock market works
+  - what's a good workout routine
+  - how do i get better at chess
+  - who is the president of the united states
+  - sing me a song
+  - what is the speed of light
+  - give me a riddle
+  - how do i ask my boss for a raise
+  - what are some good study tips
+  - how do airplanes fly
+  - summarize the plot of hamlet
+  - what's 2 plus 2
+  - tell me about black holes
+  - i can't sleep
+  - what languages do you speak

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goodboy"
+version = "0.1.0"
+description = "Throw it a task. It fetches the skill from GitHub. A trained skill router, no LLM needed."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Mamdouh El Zein" }]
+dependencies = ["numpy>=1.21", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+train = ["scikit-learn>=1.2"]
+dev = ["pytest", "scikit-learn>=1.2"]
+
+[project.scripts]
+goodboy = "goodboy.cli:main"
+
+[tool.setuptools]
+packages = ["goodboy"]
+
+[tool.setuptools.package-data]
+goodboy = ["router.json"]
