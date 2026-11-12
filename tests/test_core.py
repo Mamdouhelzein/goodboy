@@ -89,8 +89,8 @@ def test_install_skips_symlinks_and_traversal(env):
 
 
 def test_cli_fetch(env, capsys):
-    assert main(["fetch", "merge", "these", "pdf", "files"]) == 0
+    assert main(["fetch", "--local", "merge", "these", "pdf", "files"]) == 0
     out = capsys.readouterr().out
     assert "Fetched:" in out and ":pdf" in out and "## Merging" in out
-    assert main(["fetch", "tell me a joke"]) == 0
+    assert main(["fetch", "--local", "tell me a joke"]) == 0
     assert "Nothing to fetch" in capsys.readouterr().out

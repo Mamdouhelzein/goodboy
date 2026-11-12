@@ -10,6 +10,7 @@ from . import index as idx
 from .install import install, installed, list_files, skill_body
 from .repos import SourceError, parse_source
 from .router import Model, Router, best_sections
+from . import discover as disc
 
 WIDTH = 100
 
@@ -31,8 +32,46 @@ def _clip(text: str, lines: int) -> str:
     return "\n".join(rows[:lines]) + (f"\n    ... ({len(rows) - lines} more lines)" if len(rows) > lines else "")
 
 
-def fetch(router: Router, request: str, full: bool = False, sections: int = 2, lines: int = 25) -> int:
-    ranked = router.rank(request, k=3)
+def _local_sources() -> set[str]:
+    return set(config.Config.load().sources)
+
+
+def _fmt_stars(n: int) -> str:
+    return f"{n / 1000:.1f}k" if n >= 1000 else str(n)
+
+
+def _local_router(args, cfg) -> Router:
+    return _router(args, cfg)
+
+
+def _github_router(args, request: str):
+    """Router over the skills of the top-starred GitHub repos for this request."""
+    log = lambda m: print(m, file=sys.stderr)
+    kws, found = disc.discover(request, top=args.repos, log=log)
+    if not kws:
+        return None, {}
+    print(f"Searched GitHub for: {' '.join(kws)} skill")
+    if not found:
+        print("No GitHub repo with a matching skill found for that.")
+        return None, {}
+    stars = {}
+    print(f"Top {len(found)} repos by stars that have a matching skill:")
+    for repo, skills, _ in found:
+        stars[repo.full_name] = repo.stars
+        print(f"  {_fmt_stars(repo.stars):>6} stars  {repo.full_name}  ({len(skills)} skill{'s' * (len(skills) != 1)})")
+    print()
+    model = Model.load(args.model) if getattr(args, "model", None) else None
+    return Router([s for _, sk, _ in found for s in sk], model), stars
+
+
+def fetch(router: Router, request: str, full: bool = False, sections: int = 2, lines: int = 25,
+          stars: dict | None = None) -> int:
+    ranked = router.rank(request, k=5)
+    if stars and ranked:
+        # near-ties go to the more-starred repo
+        best = ranked[0][0]
+        ranked.sort(key=lambda ps: (ps[0] < best - 0.05, -stars.get(ps[1].source, 0), -ps[0]))
+    ranked = ranked[:3]
     th = router.model.threshold
     if not ranked or ranked[0][0] < th:
         close = [(p, s) for p, s in ranked if p >= 0.2]
@@ -44,10 +83,12 @@ def fetch(router: Router, request: str, full: bool = False, sections: int = 2, l
                 print("\nClosest skills, if it does:")
         if close:
             for p, s in close:
-                print(f"  {s.id}  ({p:.0%})   ->  goodboy get {s.name}")
+                ref = s.name if s.source in _local_sources() else s.id
+                print(f"  {s.id}  ({p:.0%})   ->  goodboy get '{ref}'")
         return 0
 
     p, skill = ranked[0]
+    disc.materialize(skill)
     dest = install(skill)
     body = skill_body(dest)
     print(f"Fetched: {skill.id}  (confidence {p:.0%})")
@@ -73,13 +114,20 @@ def fetch(router: Router, request: str, full: bool = False, sections: int = 2, l
 
 
 def cmd_fetch(args, cfg) -> int:
-    return fetch(_router(args, cfg), " ".join(args.request), args.full, args.sections, args.lines)
+    request = " ".join(args.request)
+    if args.local:
+        return fetch(_router(args, cfg), request, args.full, args.sections, args.lines)
+    router, stars = _github_router(args, request)
+    if router is None:
+        print("Nothing to fetch.")
+        return 0
+    return fetch(router, request, args.full, args.sections, args.lines, stars=stars)
 
 
 def cmd_interactive(args, cfg) -> int:
-    router = _router(args, cfg)
-    print(f"goodboy {__version__}: {len(router.fx.skills)} skills to fetch from. "
-          "Tell me what you need (Ctrl-D to quit).")
+    local = _router(args, cfg) if args.local else None
+    where = f"{len(local.fx.skills)} local skills" if local else "the top GitHub skill repos"
+    print(f"goodboy {__version__}: fetching from {where}. Tell me what you need (Ctrl-D to quit).")
     while True:
         try:
             line = input("\nfetch> ").strip()
@@ -90,12 +138,22 @@ def cmd_interactive(args, cfg) -> int:
             return 0
         if line:
             print()
-            fetch(router, line)
+            try:
+                if local:
+                    fetch(local, line)
+                else:
+                    router, stars = _github_router(args, line)
+                    fetch(router, line, stars=stars) if router else print("Nothing to fetch.")
+            except disc.DiscoveryError as e:
+                print(f"error: {e}")
 
 
 def cmd_search(args, cfg) -> int:
-    router = _router(args, cfg)
-    ranked = router.rank(" ".join(args.query), k=args.n)
+    query = " ".join(args.query)
+    router = _router(args, cfg) if args.local else _github_router(args, query)[0]
+    if router is None:
+        return 0
+    ranked = router.rank(query, k=args.n)
     if not ranked:
         print("No matching skills.")
     for p, s in ranked:
@@ -104,6 +162,17 @@ def cmd_search(args, cfg) -> int:
 
 
 def cmd_get(args, cfg) -> int:
+    s = None
+    if ":" in args.name and args.name.split(":", 1)[0] not in cfg.sources:
+        s = disc.get_remote(args.name)          # owner/repo:skill straight from GitHub
+        if s is None:
+            return _err(f"no skill {args.name!r} found on GitHub")
+        disc.materialize(s)
+        dest = install(s)
+        print(f"Fetched {s.id} -> {dest}")
+        if args.show:
+            print("\n" + skill_body(dest))
+        return 0
     skills = idx.load_index(cfg, refresh=args.refresh, log=lambda m: print(m, file=sys.stderr))
     s = idx.resolve(skills, args.name)
     if not s:
@@ -158,11 +227,22 @@ def cmd_model(args, cfg) -> int:
     return 0
 
 
+def _discovery_flags(sp) -> None:
+    sp.add_argument("--local", action="store_true", default=argparse.SUPPRESS,
+                    help="only your saved sources, no live GitHub search")
+    sp.add_argument("--repos", type=int, default=argparse.SUPPRESS, help="top-starred repos to use (default 3)")
+
+
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="goodboy", description="Throw it a task. It fetches the skill from GitHub.")
+    p = argparse.ArgumentParser(prog="goodboy", description="Throw it a task. It fetches the skill from GitHub.",
+                                epilog="By default every request searches GitHub live for the top-starred "
+                                       "skill repos on that topic. Use --local for your saved sources only.")
     p.add_argument("--version", action="version", version=f"goodboy {__version__}")
     p.add_argument("--model", help="path to a retrained router.json")
     p.add_argument("--refresh", action="store_true", help="re-pull sources first")
+    p.add_argument("--local", action="store_true",
+                   help="only use your saved sources (goodboy sources), not a live GitHub search")
+    p.add_argument("--repos", type=int, default=3, help="how many top-starred repos to search (default 3)")
     sub = p.add_subparsers(dest="cmd")
 
     sp = sub.add_parser("fetch", aliases=["ask"], help="find and fetch the skill for a request")
@@ -171,9 +251,11 @@ def main(argv: list[str] | None = None) -> int:
     sp.add_argument("-s", "--sections", type=int, default=2, help="relevant sections to show (default 2)")
     sp.add_argument("-l", "--lines", type=int, default=25, help="max lines per section")
     sp.set_defaults(fn=cmd_fetch)
+    _discovery_flags(sp)
     sp = sub.add_parser("search", help="rank skills for a request without fetching")
     sp.add_argument("query", nargs="+"); sp.add_argument("-n", type=int, default=8); sp.set_defaults(fn=cmd_search)
-    sp = sub.add_parser("get", help="fetch a skill by name"); sp.add_argument("name")
+    _discovery_flags(sp)
+    sp = sub.add_parser("get", help="fetch a skill by name, or owner/repo:skill from GitHub"); sp.add_argument("name")
     sp.add_argument("--show", action="store_true", help="print SKILL.md"); sp.set_defaults(fn=cmd_get)
     sp = sub.add_parser("list", help="list indexed (or --installed) skills")
     sp.add_argument("--installed", action="store_true"); sp.set_defaults(fn=cmd_list)
@@ -187,7 +269,7 @@ def main(argv: list[str] | None = None) -> int:
     fn = getattr(args, "fn", cmd_interactive)
     try:
         return fn(args, config.Config.load())
-    except SourceError as e:
+    except (SourceError, disc.DiscoveryError) as e:
         return _err(str(e))
     except KeyboardInterrupt:
         return 130
